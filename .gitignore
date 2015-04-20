@@ -5,6 +5,7 @@ webconverger/*.vdi
 webconverger/*.log
 webconverger/binary.vdi
 webconverger/binary/
+webconverger/cache/
 webconverger/chroot/
 webconverger/config/binary
 webconverger/config/build
@@ -14,3 +15,5 @@ webconverger/config/chroot
 webconverger/config/common
 webconverger/config/hooks
 webconverger/config/source
+webconverger/tmp/
+playr_loader_logo.png
