@@ -7,8 +7,11 @@ webconverger/live-image-i386
 webconverger/live-image-i386.hybrid.iso
 webconverger/binary/
 webconverger/chroot/
+webconverger/cache/
 webconverger/config/binary
 webconverger/config/bootstrap
 webconverger/config/chroot
 webconverger/config/common
 webconverger/config/source
+playr_loader_logo.png
+
