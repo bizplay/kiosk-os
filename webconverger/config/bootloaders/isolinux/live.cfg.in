@@ -1,7 +1,7 @@
 DEFAULT en
 
 label en
-	menu label Webconverger Live for Web Kiosks
+	menu label Webconverger Live
 	kernel @LINUX@
 	append initrd=@INITRD@ @APPEND_LIVE@ bootfrom=removable
 
@@ -67,11 +67,6 @@ LABEL exit
 	MENU LABEL Back to main menu
 MENU EXIT
 MENU END
-
-label neon-@FLAVOUR@
-	menu label Neon Live for Web Digital Signage
-	kernel @LINUX@
-	append initrd=@INITRD@ @APPEND_LIVE@ bootfrom=removable chrome=neon noblank
 
 label install
 	menu label Install Webconverger for automatic updates
