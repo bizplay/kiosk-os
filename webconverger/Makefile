@@ -19,11 +19,34 @@ VERSION=$(shell cd chroot; git describe --always)
 
 export SOURCE_DATE_EPOCH ?= $(shell git --git-dir=chroot/.git log -1 --pretty=%ct)
 
+IMG = $(wildcard live-image-i386 live-image-i386.img)
+
 build: TYPE=iso-hybrid
 build: binary
 
 build-hdd: TYPE=hdd
 build-hdd: binary
+	# Create an empty small partition in the img file after the one that the build
+	# just created. This empty small partition can be extended when booting from
+	# the image to create room for persisting user data is needed
+	#
+	# Create an ext filesystem on the newly created empty partition and label it
+	# The ext3 filesystem is used because it will painlessly extend when the partition
+	# is resized later to fit the device. The label can be used to identify this
+	# partition when it is needed.
+	echo "Creating extra partition to optionally persist user data"
+	$(SUDO) truncate --size=+2M "$(IMG)"
+	first_partition_end=`$(SUDO) parted --script "$(IMG)" unit B print | awk '$$7 ~ /boot/ {gsub(/.$$/,"",$$3); print $$3}'`; \
+	second_partition_start=$$((first_partition_end + 1)); \
+	$(SUDO) parted --script "$(IMG)" mkpart primary $${second_partition_start}B 100%; \
+	$(SUDO) losetup -o $${second_partition_start} /dev/loop0 "$(IMG)"
+	$(SUDO) mke2fs -L persistence -t ext2 -T default /dev/loop0
+	$(SUDO) mkdir chroot/tmp/tmp_mount
+	$(SUDO) mount /dev/loop0 chroot/tmp/tmp_mount
+	$(SUDO) chown -R 1000 chroot/tmp/tmp_mount
+	$(SUDO) umount chroot/tmp/tmp_mount
+	$(SUDO) rmdir chroot/tmp/tmp_mount
+	$(SUDO) losetup --detach /dev/loop0
 
 ifneq ($(shell id -u),0)
 SUDO=sudo env SOURCE_DATE_EPOCH=$(SOURCE_DATE_EPOCH)
