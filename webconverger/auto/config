@@ -6,7 +6,7 @@ lb config noauto --clean \
 	--bootappend-live "$BOOTAPPEND homepage=http://play.playr.biz/ keep_append=homepage=http://play.playr.biz/ fetch-revision=production keep_append=fetch-revision=production debug" \
 	--parent-mirror-chroot "http://http.debian.net/debian/" \
 	--parent-mirror-binary "http://http.debian.net/debian/" \
-	--binary-filesystem fat16 \
+	--binary-filesystem fat32 \
 	-k "686-pae" \
 	-a i386 \
 	--parent-archive-areas "main contrib non-free" \
@@ -21,4 +21,5 @@ lb config noauto --clean \
 	--apt-recommends false \
 	--memtest none \
 	--source false \
+	--hdd-size 1022 \
 	${@}
