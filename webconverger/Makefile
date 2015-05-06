@@ -3,18 +3,6 @@ BRANCH := master
 OUTPUT := /srv/www/build.webconverger.org/output
 
 # Check if live-build is new enough
-# newest version of Debian-live-config does no longer have this section
-LB_VERSION:=$(shell lb --version)
-MIN_LB_VERSION:=3.0.0
-TOONEW_LB_VERSION:=4.0~
-ifneq ($(shell dpkg --compare-versions "$(LB_VERSION)" ge "$(MIN_LB_VERSION)"; echo $$?),0)
-$(error live-build is too old, needs at least version $(MIN_LB_VERSION) $(CMP))
-endif
-ifneq ($(shell dpkg --compare-versions "$(LB_VERSION)" lt "$(TOONEW_LB_VERSION)"; echo $$?),0)
-$(error live-build is too new, needs at less than version $(TOONEW_LB_VERSION) $(CMP))
-endif
-
-# Check if live-build is new enough
 LB_VERSION:=$(shell lb --version)
 MIN_LB_VERSION:=4.0.0
 TOONEW_LB_VERSION:=5.0~
@@ -83,6 +71,27 @@ binary: clean
 	# image type
 	$(SUDO) lb binary_iso
 	$(SUDO) lb binary_hdd
+	# Create an empty small partition in the img file after the one that the build
+	# just created. This empty small partition can be extended when booting from
+	# the image to create room for persisting user data is needed
+	#
+	# Create an ext filesystem on the newly created empty partition and label it
+	# The ext3 filesystem is used because it will painlessly extend when the partition
+	# is resized later to fit the device. The label can be used to identify this
+	# partition when it is needed.
+	echo "Creating extra partition to optionally persist user data"
+	$(SUDO) truncate --size=+2M live-image-i386
+	first_partition_end=`$(SUDO) parted --script live-image-i386 unit B print | awk '$$7 ~ /boot/ {gsub(/.$$/,"",$$3); print $$3}'`; \
+	second_partition_start=$$((first_partition_end + 1)); \
+	$(SUDO) parted --script live-image-i386 mkpart primary $${second_partition_start}B 100%; \
+	$(SUDO) losetup -o $${second_partition_start} /dev/loop0 live-image-i386
+	$(SUDO) mke2fs -L user_data -t ext2 -T default /dev/loop0
+	$(SUDO) mkdir chroot/tmp/tmp_mount
+	$(SUDO) mount /dev/loop0 chroot/tmp/tmp_mount
+	$(SUDO) chown -R 1000 chroot/tmp/tmp_mount
+	$(SUDO) umount chroot/tmp/tmp_mount
+	$(SUDO) rmdir chroot/tmp/tmp_mount
+	$(SUDO) losetup --detach /dev/loop0
 
 clean:
 	$(SUDO) lb clean --binary
