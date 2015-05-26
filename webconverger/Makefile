@@ -70,7 +70,7 @@ binary: clean
 	# filesystem.git directory will be bindmounted as /.git, making
 	# the root filesystem its worktree
 	$(SUDO) git --git-dir=binary/live/filesystem.git config --replace-all core.bare false
-	lb config -b $(TYPE) --build-with-chroot false # --chroot-filesystem none
+	$(SUDO) lb config -b $(TYPE) --build-with-chroot false # --chroot-filesystem none
 	$(SUDO) lb binary_linux-image
 	$(SUDO) lb binary_syslinux
 	# Copy the template bootloader config, so the config can be
