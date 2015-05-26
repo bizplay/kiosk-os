@@ -58,18 +58,18 @@ binary: clean
 	# ${CURDIR} to construct an absolute path). If chroot is already
 	# a shallow clone, then just copy the .git directory
 	if test -f chroot/.git/shallow; then \
-		mkdir -p binary/live; \
-		cp -r chroot/.git binary/live/filesystem.git; \
+		$(SUDO) mkdir -p binary/live; \
+		$(SUDO) cp -r chroot/.git binary/live/filesystem.git; \
 	else \
-		git clone --no-local --depth 1 --bare file://$(CURDIR)/chroot/.git binary/live/filesystem.git; \
+		$(SUDO) git clone --no-local --depth 1 --bare file://$(CURDIR)/chroot/.git binary/live/filesystem.git; \
 	fi
-	git --git-dir=binary/live/filesystem.git remote set-url origin "$(REPO)"
-	git --git-dir=binary/live/filesystem.git tag initial-revision
+	$(SUDO) git --git-dir=binary/live/filesystem.git remote set-url origin "$(REPO)"
+	$(SUDO) git --git-dir=binary/live/filesystem.git tag initial-revision
 	# Make the repository look like a non-bare one. It will still
 	# not have a worktree on disk, but in a running system, the
 	# filesystem.git directory will be bindmounted as /.git, making
 	# the root filesystem its worktree
-	git --git-dir=binary/live/filesystem.git config --replace-all core.bare false
+	$(SUDO) git --git-dir=binary/live/filesystem.git config --replace-all core.bare false
 	lb config -b $(TYPE) --build-with-chroot false # --chroot-filesystem none
 	$(SUDO) lb binary_linux-image
 	$(SUDO) lb binary_syslinux
@@ -87,3 +87,9 @@ binary: clean
 clean:
 	$(SUDO) lb clean --binary
 	rm -f webc*.iso webc*.img webc*.txt
+
+deploy: build
+	mv binary.hybrid.iso webc-$(VERSION).iso
+	./chroot.sh "dpkg-query -l" | grep ^ii > webc-$(VERSION).txt
+	for i in webc*.iso; do mv $$i $(OUTPUT); echo "Redirect /latest.iso /$$i " > $(OUTPUT)/.htaccess ; done
+	for i in webc*.txt; do mv $$i $(OUTPUT); echo "Redirect /latest.txt /$$i " >> $(OUTPUT)/.htaccess ; done
