@@ -1,7 +1,10 @@
 webconverger/.build
-webconverger/binary.hybrid.iso
-webconverger/binary.img
-webconverger/binary.vdi
+webconverger/*.iso
+webconverger/*.img
+webconverger/*.vdi
+webconverger/*.log
+webconverger/live-image-i386
+webconverger/live-image-i386.hybrid.iso
 webconverger/binary/
 webconverger/chroot/
 webconverger/config/binary
