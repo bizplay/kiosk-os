@@ -1,6 +1,8 @@
 webconverger/.build
-webconverger/live-image-i386
-webconverger/live-image-i386.hybrid.iso
+webconverger/*.iso
+webconverger/*.img
+webconverger/*.vdi
+webconverger/*.log
 webconverger/binary.vdi
 webconverger/binary/
 webconverger/chroot/
@@ -10,4 +12,5 @@ webconverger/config/bootstrap
 webconverger/config/hooks/
 webconverger/config/chroot
 webconverger/config/common
+webconverger/config/hooks
 webconverger/config/source
