@@ -85,7 +85,7 @@ binary: clean
 	second_partition_start=$$((first_partition_end + 1)); \
 	$(SUDO) parted --script live-image-i386 mkpart primary $${second_partition_start}B 100%; \
 	$(SUDO) losetup -o $${second_partition_start} /dev/loop0 live-image-i386
-	$(SUDO) mke2fs -L user_data -t ext2 -T default /dev/loop0
+	$(SUDO) mke2fs -L persistence -t ext2 -T default /dev/loop0
 	$(SUDO) mkdir chroot/tmp/tmp_mount
 	$(SUDO) mount /dev/loop0 chroot/tmp/tmp_mount
 	$(SUDO) chown -R 1000 chroot/tmp/tmp_mount
