@@ -3,7 +3,7 @@
 BOOTAPPEND=$(cat chroot/etc/webc/boot-cmdline | grep -v "^#" | head -n 1)
 
 lb config noauto --clean \
-	--bootappend-live "$BOOTAPPEND homepage=http://play.playr.biz/ keep_append=homepage=http://play.playr.biz/ fetch-revision=production keep_append=fetch-revision=production debug" \
+	--bootappend-live "$BOOTAPPEND homepage=http://play.playr.biz/ keep_append=homepage=http://play.playr.biz/ fetch-revision=production keep_append=fetch-revision=production debug keep_append=debug" \
 	--parent-mirror-chroot "http://http.debian.net/debian/" \
 	--parent-mirror-binary "http://http.debian.net/debian/" \
 	--binary-filesystem fat32 \
