@@ -69,6 +69,6 @@ MENU EXIT
 MENU END
 
 label install
-	menu label Install Webconverger for automatic updates
+	menu label Install Webconverger on hard disk
 	kernel @LINUX@
 	append initrd=@INITRD@ kernel-flavour=@FLAVOUR@ systemd.unit=install.target @APPEND_LIVE@ bootfrom=removable
