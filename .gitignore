@@ -1,17 +1,19 @@
 webconverger/.build
+webconverger/live-image-i386*
 webconverger/*.iso
 webconverger/*.img
 webconverger/*.vdi
 webconverger/*.log
-webconverger/live-image-i386
-webconverger/live-image-i386.hybrid.iso
 webconverger/binary/
-webconverger/chroot/
 webconverger/cache/
+webconverger/chroot/
+webconverger/tmp/
 webconverger/config/binary
 webconverger/config/bootstrap
+webconverger/config/build
 webconverger/config/chroot
 webconverger/config/common
+webconverger/config/hooks
 webconverger/config/source
 playr_loader_logo.png
 
