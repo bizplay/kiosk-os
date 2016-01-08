@@ -31,9 +31,11 @@ build-vbox-hdd: build-hdd
 	# so you don't have to re-add the vdi file in Virtualbox.
 	if [ -f "$(VDI)" ]; then \
 		UUID="--uuid $$(VBoxManage showhdinfo $(VDI) | awk '$$1 == "UUID:" {print $$2}')"; \
-		rm -f $(VDI); \
+		$(SUDO) rm -f $(VDI); \
+	else \
+		UUID="--uuid $$(cat vdi-info.txt | awk '$$1 == "UUID:" {print $$2}')"; \
 	fi; \
-	VBoxManage convertfromraw live-image-i386 $(VDI) $$UUID
+	$(SUDO) VBoxManage convertfromraw live-image-i386 $(VDI) $$UUID
 
 binary: clean
 	# Check that the chroot has no changes
