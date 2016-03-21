@@ -35,7 +35,7 @@ build-vbox-hdd: build-hdd
 	else \
 		UUID="--uuid $$(cat vdi-info.txt | awk '$$1 == "UUID:" {print $$2}')"; \
 	fi; \
-	$(SUDO) VBoxManage convertfromraw live-image-i386 $(VDI) $$UUID
+	VBoxManage convertfromraw live-image-i386 $(VDI) $$UUID
 
 binary: clean
 	# Check that the chroot has no changes
