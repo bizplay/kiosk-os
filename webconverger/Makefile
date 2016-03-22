@@ -1,4 +1,4 @@
-REPO := git://github.com/bizplay/kiosk-os-chroot.git
+REPO := http://git.bizplay.com/bizplay/kiosk-os-chroot.git
 BRANCH := master
 OUTPUT := /srv/www/build.webconverger.org/output
 
