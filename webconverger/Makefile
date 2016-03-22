@@ -1,4 +1,4 @@
-REPO := https://github.com/Webconverger/webc.git
+REPO := http://git.bizplay.com/bizplay/kiosk-os-chroot.git
 BRANCH := master
 
 # Check if live-build is new enough
