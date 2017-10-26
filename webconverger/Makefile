@@ -20,6 +20,7 @@ VERSION=$(shell cd chroot; git describe --always)
 export SOURCE_DATE_EPOCH ?= $(shell git --git-dir=chroot/.git log -1 --pretty=%ct)
 
 IMG = $(wildcard live-image-i386 live-image-i386.img)
+OUTPUT := /srv/www/build.webconverger.org/output
 
 build: TYPE=iso-hybrid
 build: binary
@@ -136,3 +137,9 @@ binary: clean
 clean:
 	$(SUDO) lb clean --binary
 	rm -f webc*.iso webc*.img webc*.txt $(VDI)
+
+deploy: build
+	mv binary.hybrid.iso webc-$(VERSION).iso
+	./chroot.sh "dpkg-query -l" | grep ^ii > webc-$(VERSION).txt
+	for i in webc*.iso; do mv $$i $(OUTPUT); echo "Redirect /latest.iso /$$i " > $(OUTPUT)/.htaccess ; done
+	for i in webc*.txt; do mv $$i $(OUTPUT); echo "Redirect /latest.txt /$$i " >> $(OUTPUT)/.htaccess ; done
