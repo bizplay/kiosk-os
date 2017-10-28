@@ -46,6 +46,11 @@ build-vbox-hdd: build-hdd
 	rm -f $(VDI); \
 	IMG="$(wildcard live-image-i386 live-image-i386.img)"; \
 	VBoxManage convertfromraw $$IMG $(VDI) $$UUID
+	# This enlarges the virtualbox hd to allow testing the resize
+	# script and updates in virtualbox. This does not actually
+	# enlarge the vdi file, that only happens when data is written
+	# to it.
+	VBoxManage modifyhd $(VDI) --resize 8192
 
 binary: clean
 	# Check that the chroot has no changes
