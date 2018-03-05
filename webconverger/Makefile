@@ -52,6 +52,15 @@ build-vbox-hdd: build-hdd
 	# to it.
 	VBoxManage modifyhd $(VDI) --resize 8192
 
+QCOW2=live-image-i386.qcow2
+build-qemu-hdd: build-hdd
+	IMG="$(wildcard live-image-i386 live-image-i386.img)"; \
+	qemu-img convert -f raw -O qcow2 $$IMG $(QCOW2)
+	# This enlarges the hd to allow testing the resize script and updates.
+	# This does not actually enlarge the file, that only happens when data
+	# is written to it.
+	qemu-img resize $(QCOW2) 8G
+
 binary: clean
 	# Check that the chroot has no changes
 	[ -z "$$(cd chroot &&  git status --porcelain)" ] || \
